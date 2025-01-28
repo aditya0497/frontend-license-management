@@ -1,7 +1,3 @@
-# Getting Started with Create React App
-
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
 ## Available Scripts
 
 In the project directory, you can run:
@@ -27,20 +23,46 @@ It correctly bundles React in production mode and optimizes the build for the be
 The build is minified and the filenames include the hashes.\
 Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+**
+Project setup**
 
-### `npm run eject`
+Kindly take the latest pull of the project and ensure that you install the dependencies using the **npm i** command.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+The project has the following capabilties implemented:
+1. License Management: Creation of licenses where the user creates custom licenses based on their needs such as time-bound license, usage-limited license where the usage would be greater than zero or hardware-tied license.
+Generate, display and copy license the license key as a string or file (e.g., .json or .txt).
+It is assumed that there would be limit set on a daily basis that only a certain number of license creation will be allowed. For now, it is configured to allow only 5 license creation per day.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+2. Encryption Workflow
+Encrypt Models or Images:
+Upload a file (e.g., .bin, .pt, or .jpg).
+Input the license key generated in the previous step.
+Mock encryption (e.g., append a dummy hash or encrypt the file in the frontend with AES).
+The user has the option to choose the kind of encryption algorithm they want to be used. For now **AES and RSA** are the available options configured.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+3. Secure Sharing
+Option to securely share the generated license and encrypted files. The generated license and the encrypted files would be available for download for a time of 30mins which is by default and can be configured as per the user needs.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+4. Mock Backend (mocks folder in the code)
+APIs are simulated for:
+a) License creation.
+b) File encryption
+c) Secure sharing.
+d) MSW (Mock Service Worker) used to mimic backend behavior.
 
-## Learn More
+5. Test cases for the Encryption Workflow and license creation
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+6. LocalStorage for handling the license creation limits
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Sharing a few images from the dashboard system:
+
+1. Landing Page : <img width="356" alt="image" src="https://github.com/user-attachments/assets/619bb7c0-adca-4700-b3f0-528db73448b6" />
+
+2. License creation View: <img width="347" alt="image" src="https://github.com/user-attachments/assets/cbc1e5c4-ebf7-4f01-9bc1-f39dfc39c9c1" />
+
+3. File Encrytpion View: <img width="379" alt="image" src="https://github.com/user-attachments/assets/a3addc4d-1b65-4181-b953-2f5ef0a45599" />
+
+4. Secure Sharing View: <img width="593" alt="image" src="https://github.com/user-attachments/assets/a70ad563-0a6d-4b30-b576-870ed18494a8" />
+
+
+
