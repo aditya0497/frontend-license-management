@@ -60,3 +60,9 @@ Sharing a few images from the dashboard system:
 
 <img width="356" alt="image" src="https://github.com/user-attachments/assets/619bb7c0-adca-4700-b3f0-528db73448b6" />
 
+<img width="379" alt="image" src="https://github.com/user-attachments/assets/a3addc4d-1b65-4181-b953-2f5ef0a45599" />
+
+<img width="593" alt="image" src="https://github.com/user-attachments/assets/a70ad563-0a6d-4b30-b576-870ed18494a8" />
+
+
+
