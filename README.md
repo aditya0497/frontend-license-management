@@ -54,3 +54,9 @@ d) MSW (Mock Service Worker) used to mimic backend behavior.
 
 6. LocalStorage for handling the license creation limits
 
+Sharing a few images from the dashboard system:
+
+<img width="347" alt="image" src="https://github.com/user-attachments/assets/cbc1e5c4-ebf7-4f01-9bc1-f39dfc39c9c1" />
+
+<img width="356" alt="image" src="https://github.com/user-attachments/assets/619bb7c0-adca-4700-b3f0-528db73448b6" />
+
