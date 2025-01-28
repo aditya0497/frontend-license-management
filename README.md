@@ -56,13 +56,13 @@ d) MSW (Mock Service Worker) used to mimic backend behavior.
 
 Sharing a few images from the dashboard system:
 
-<img width="347" alt="image" src="https://github.com/user-attachments/assets/cbc1e5c4-ebf7-4f01-9bc1-f39dfc39c9c1" />
+1. Landing Page : <img width="356" alt="image" src="https://github.com/user-attachments/assets/619bb7c0-adca-4700-b3f0-528db73448b6" />
 
-<img width="356" alt="image" src="https://github.com/user-attachments/assets/619bb7c0-adca-4700-b3f0-528db73448b6" />
+2. License creation View: <img width="347" alt="image" src="https://github.com/user-attachments/assets/cbc1e5c4-ebf7-4f01-9bc1-f39dfc39c9c1" />
 
-<img width="379" alt="image" src="https://github.com/user-attachments/assets/a3addc4d-1b65-4181-b953-2f5ef0a45599" />
+3. File Encrytpion View: <img width="379" alt="image" src="https://github.com/user-attachments/assets/a3addc4d-1b65-4181-b953-2f5ef0a45599" />
 
-<img width="593" alt="image" src="https://github.com/user-attachments/assets/a70ad563-0a6d-4b30-b576-870ed18494a8" />
+4. Secure Sharing View: <img width="593" alt="image" src="https://github.com/user-attachments/assets/a70ad563-0a6d-4b30-b576-870ed18494a8" />
 
 
 
