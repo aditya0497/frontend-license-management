@@ -10,6 +10,7 @@ interface CreateLicenseRequest {
 interface EncryptFileRequest {
   file: string;
   licenseKey: string;
+  encryptionType: 'AES' | 'RSA' | 'None';
 }
 
 export const handlers = [
@@ -18,20 +19,26 @@ export const handlers = [
     const licenseKey = `${licenseType}-${Math.random().toString(36).substr(2, 9)}`;
     return res(ctx.status(200), ctx.json({ licenseKey }));
   }),
-
+  
   rest.post('/api/encryptFile', (req, res, ctx) => {
-    const { file, licenseKey } = req.body as EncryptFileRequest;
-    const encryptedFile = `${file}-encrypted-with-${licenseKey}`;
+    const { file, licenseKey, encryptionType } = req.body as EncryptFileRequest;
+  
+    // encryptionType (AES or RSA)
+    let encryptedFile = '';
+    
+    if (encryptionType === 'AES') {
+      encryptedFile = `${file}-encrypted-with-AES-and-license-${licenseKey}`;
+    } else if (encryptionType === 'RSA') {
+      encryptedFile = `${file}-encrypted-with-RSA-and-license-${licenseKey}`;
+    } else {
+      encryptedFile = `${file}-encrypted-with-unknown-method`;
+    }
+  
     return res(ctx.status(200), ctx.json({ encryptedFile }));
-  }),
-
-  rest.get('/api/generateLink', (_req, res, ctx) => {
-    const secureLink = 'https://secure.example.com/share/abcd1234';
-    return res(ctx.status(200), ctx.json({ secureLink }));
-  }),
+  }),  
 
   rest.post('/api/generateSecureLink', (_req, res, ctx) => {
-    const secureLink = 'https://secure.example.com/share/abcd1234';
+    const secureLink = 'https://secure.example.com/share/1234';
     return res(ctx.status(200), ctx.json({ secureLink }));
   }),
 ];

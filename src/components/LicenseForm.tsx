@@ -98,8 +98,8 @@ export const LicenseForm: React.FC = () => {
       </button>
 
       {isModalOpen && (
-        <div className="modal-overlay">
-          <div className="modal-content">
+        <div className={`modal-overlay ${isModalOpen ? 'open' : ''}`}>
+          <div className={`modal-content ${isModalOpen ? 'open' : ''}`}>
             <button
               onClick={() => setIsModalOpen(false)}
               className="close-btn"

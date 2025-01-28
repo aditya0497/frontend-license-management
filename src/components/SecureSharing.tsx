@@ -1,20 +1,18 @@
 import React, { useState } from 'react';
-import './SecureSharing.css'; 
+import './SecureSharing.css';
 
 export const SecureSharing: React.FC = () => {
   const [secureLink, setSecureLink] = useState<string | null>(null);
   const [isExpired, setIsExpired] = useState(false);
   const [error, setError] = useState<string>('');
+  const [isOpen, setIsOpen] = useState(false);
 
-  
   const handleGenerateLink = async () => {
-    setError('');  
+    setError('');
     try {
       const response = await fetch('/api/generateSecureLink', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ file: 'encrypted-file-content' })
       });
 
@@ -28,38 +26,31 @@ export const SecureSharing: React.FC = () => {
 
       setTimeout(() => {
         setIsExpired(true);
-      }, 1800000); // setting expiration to 30 minutes for now
+      }, 1800000); // 30 minutes expiry
     } catch (err) {
       setError('An error occurred while generating the secure link.');
     }
   };
 
   const handleEmailShare = () => {
-    if (!secureLink) {
-      return;
-    }
-    
+    if (!secureLink) return;
     const emailSubject = 'Secure License and Encrypted File';
-    const emailBody = `Here is your secure link for the license and encrypted file:\n\n${secureLink}`;
-    
+    const emailBody = `Here is your secure link:\n\n${secureLink}`;
     window.location.href = `mailto:?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
   };
 
   const handleDownloadEncryptedFile = async () => {
     try {
-      const response = await fetch('/api/downloadEncryptedFile', {
-        method: 'GET',
-      });
+      const response = await fetch('/api/downloadEncryptedFile', { method: 'GET' });
 
       if (!response.ok) {
         throw new Error('Failed to download the encrypted file.');
       }
 
       const fileBlob = await response.blob();
-
       const link = document.createElement('a');
       link.href = URL.createObjectURL(fileBlob);
-      link.download = 'encrypted-file.bin'; 
+      link.download = 'encrypted-file.bin';
       link.click();
     } catch (err) {
       setError('An error occurred while downloading the encrypted file.');
@@ -67,59 +58,49 @@ export const SecureSharing: React.FC = () => {
   };
 
   return (
-    <div className="secure-sharing-container">
-      <button
-        onClick={handleGenerateLink}
-        className="generate-link-button"
-      >
-        Generate Secure Link
+    <div>
+      <button onClick={() => setIsOpen(true)} className="open-popup-btn">
+        🔐 Secure Sharing
       </button>
 
-      {secureLink && !isExpired && (
-        <div className="secure-link-section">
-          <p className="font-medium text-gray-700">Secure Link:</p>
-          <a
-            href={secureLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="secure-link"
-          >
-            {secureLink}
-          </a>
-        </div>
-      )}
+      {isOpen && (
+        <div className="popup-overlay">
+          <div className="popup-content">
+            <button className="close-popup" onClick={() => setIsOpen(false)}>✖</button>
+            <h2 className="popup-title">🔒 Secure Sharing</h2>
 
-      {isExpired && (
-        <div className="expired-message">
-          <p>The secure link has expired and is no longer accessible.</p>
-        </div>
-      )}
+            <button onClick={handleGenerateLink} className="action-button">
+              Generate Secure Link
+            </button>
 
-      {secureLink && (
-        <div>
-          <button
-            onClick={handleEmailShare}
-            className="share-email-button"
-          >
-            Share via Email
-          </button>
-        </div>
-      )}
+            {secureLink && !isExpired && secureLink && (
+              <div className="secure-link-container">
+                <p>✅ Secure Link Generated:</p>
+                <a href={secureLink} target="_blank" rel="noopener noreferrer" className="secure-link">
+                  {secureLink}
+                </a>
+              </div>
+            )}
 
-      {secureLink && (
-        <div>
-          <button
-            onClick={handleDownloadEncryptedFile}
-            className="download-file-button"
-          >
-            Download Encrypted File
-          </button>
-        </div>
-      )}
+            {isExpired && (
+              <div className="expired-message">
+                <p>⚠️ This link has expired.</p>
+              </div>
+            )}
 
-      {error && (
-        <div className="error-message">
-          <p>{error}</p>
+            {secureLink && (
+              <>
+                <button onClick={handleEmailShare} className="action-button email-btn">
+                  ✉️ Share via Email
+                </button>
+                <button onClick={handleDownloadEncryptedFile} className="action-button download-btn">
+                  ⬇️ Download File
+                </button>
+              </>
+            )}
+
+            {error && <p className="error-message">⚠️ {error}</p>}
+          </div>
         </div>
       )}
     </div>

@@ -1,117 +1,140 @@
-.modal-overlay {
-    position: fixed;
-    inset: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+ .modal-overlay {
+     position: fixed;
+     inset: 0;
+     background-color: rgba(0, 0, 0, 0.5);
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     opacity: 0; 
+     visibility: hidden;
+     transition: opacity 0.3s ease, visibility 0.3s ease;
+ }
+
+ .modal-overlay.open {
+     opacity: 1; 
+     visibility: visible; 
+     z-index: 1;
+     animation: fadeIn 0.3s ease-in-out;
+ } 
+
+ .modal-content {
+     background-color: white;
+     padding: 1.5rem;
+     border-radius: 0.5rem;
+     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+     width: 24rem;
+     position: relative;
+     transform: scale(0.95); 
+     opacity: 0; 
+     transition: transform 0.3s ease, opacity 0.3s ease; 
+ }
+
+ .modal-content.open {
+     transform: scale(1); 
+     opacity: 1; 
+ }
+
+ .close-btn {
+     position: absolute;
+     top: 0.5rem;
+     right: 0.5rem;
+     font-size: 1.25rem;
+     color: #666;
+     cursor: pointer;
+ }
+
+ .form-header {
+     font-size: 1.25rem;
+     font-weight: 600;
+     text-align: center;
+     margin-bottom: 1.5rem;
+ }
   
-  .modal-content {
-    background-color: white;
-    padding: 1.5rem;
-    border-radius: 0.5rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: 24rem;
-    position: relative;
-  }
+ .input-group {
+   margin-bottom: 1.5rem;
+ }
   
-  .close-btn {
-    position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
-    font-size: 1.25rem;
-    color: #666;
-    cursor: pointer;
-  }
+ .label {
+   display: block;
+   font-size: 0.875rem;
+   font-weight: 500;
+   color: #4b5563;
+   margin-bottom: 0.5rem;
+ }
   
-  .form-header {
-    font-size: 1.25rem;
-    font-weight: 600;
-    text-align: center;
-    margin-bottom: 1.5rem;
-  }
+ .input-field {
+   width: 100%;
+   padding: 0.75rem;
+   border: 1px solid #d1d5db;
+   border-radius: 0.375rem;
+   font-size: 1rem;
+   transition: border-color 0.2s;
+ }
   
-  .input-group {
-    margin-bottom: 1.5rem;
-  }
+ .input-field:focus {
+   border-color: #2563eb;
+ }
   
-  .label {
-    display: block;
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: #4b5563;
-    margin-bottom: 0.5rem;
-  }
+ .error-text {
+   font-size: 0.75rem;
+   color: #f87171;
+   margin-top: 0.25rem;
+ }
   
-  .input-field {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #d1d5db;
-    border-radius: 0.375rem;
-    font-size: 1rem;
-    transition: border-color 0.2s;
-  }
+ .btn-primary {
+   width: 100%;
+   background-color: #2563eb;
+   color: white;
+   padding: 0.5rem 1rem;
+   border-radius: 0.375rem;
+   font-size: 1rem;
+   transition: background-color 0.2s;
+ }
   
-  .input-field:focus {
-    border-color: #2563eb;
-  }
+ .btn-primary:hover {
+   background-color: #1d4ed8;
+ }
   
-  .error-text {
-    font-size: 0.75rem;
-    color: #f87171;
-    margin-top: 0.25rem;
-  }
+ .btn-secondary {
+   padding: 0.75rem 1rem;
+   border-radius: 0.375rem;
+   background-color: #4b5563;
+   color: white;
+   font-size: 1rem;
+   transition: background-color 0.2s;
+ }
   
-  .btn-primary {
-    width: 100%;
-    background-color: #2563eb;
-    color: white;
-    padding: 0.75rem;
-    border-radius: 0.375rem;
-    font-size: 1rem;
-    transition: background-color 0.2s;
-  }
+ .btn-secondary:hover {
+   background-color: #6b7280;
+ }
   
-  .btn-primary:hover {
-    background-color: #1d4ed8;
-  }
+ .btn-copy {
+   background-color: #10b981;
+ }
   
-  .btn-secondary {
-    padding: 0.75rem 1rem;
-    border-radius: 0.375rem;
-    background-color: #4b5563;
-    color: white;
-    font-size: 1rem;
-    transition: background-color 0.2s;
-  }
+ .btn-copy:hover {
+   background-color: #059669;
+ }
   
-  .btn-secondary:hover {
-    background-color: #6b7280;
-  }
+ .btn-download {
+   background-color: #e5e7eb;
+   color: #4b5563;
+ }
   
-  .btn-copy {
-    background-color: #10b981;
-  }
+ .btn-download:hover {
+   background-color: #d1d5db;
+ }
+ 
+ .mt-6 {
+   margin-top: 1.5rem;
+ }
   
-  .btn-copy:hover {
-    background-color: #059669;
-  }
-  
-  .btn-download {
-    background-color: #e5e7eb;
-    color: #4b5563;
-  }
-  
-  .btn-download:hover {
-    background-color: #d1d5db;
-  }
-  
-  .mt-6 {
-    margin-top: 1.5rem;
-  }
-  
-  .flex {
-    display: flex;
-    gap: 0.5rem;
-  }  
+ .flex {
+   display: flex;
+   gap: 0.5rem;
+ }  
+
+ @keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}

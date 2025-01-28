@@ -4,6 +4,7 @@ import './EncryptionWorkflow.css';
 export const EncryptionWorkflow: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
   const [licenseKey, setLicenseKey] = useState('');
+  const [encryptionType, setEncryptionType] = useState('AES');
   const [encryptedFile, setEncryptedFile] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [error, setError] = useState('');
@@ -23,6 +24,7 @@ export const EncryptionWorkflow: React.FC = () => {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('licenseKey', licenseKey);
+    formData.append('encryptionType', encryptionType);
 
     try {
       const response = await fetch('/api/encryptFile', {
@@ -43,7 +45,7 @@ export const EncryptionWorkflow: React.FC = () => {
   };
 
   return (
-    <div className="encryption-container">
+    <div>
       <button onClick={() => setIsModalOpen(true)} className="encrypt-button">
         Encrypt File
       </button>
@@ -54,7 +56,9 @@ export const EncryptionWorkflow: React.FC = () => {
             <h2 className="modal-title">Encrypt File</h2>
 
             <div className="input-container">
+              <label htmlFor="file-input" className="input-label">Upload File</label>
               <input
+                id="file-input"
                 type="file"
                 onChange={(e) => {
                   if (e.target.files) setFile(e.target.files[0]);
@@ -71,6 +75,17 @@ export const EncryptionWorkflow: React.FC = () => {
                 onChange={(e) => setLicenseKey(e.target.value)}
                 className="input-field"
               />
+            </div>
+
+            <div className="input-container">
+              <select
+                value={encryptionType}
+                onChange={(e) => setEncryptionType(e.target.value)}
+                className="input-field"
+              >
+                <option value="AES">AES</option>
+                <option value="RSA">RSA</option>
+              </select>
             </div>
 
             {error && <p className="error-message">{error}</p>}

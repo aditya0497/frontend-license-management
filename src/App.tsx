@@ -1,20 +1,22 @@
-import { LicenseForm } from './components/LicenseForm';
-import { EncryptionWorkflow } from './components/EncryptionWorkflow';
-import { SecureSharing } from './components/SecureSharing';
-import './App.css';
+import { LicenseForm } from "./components/LicenseForm";
+import { EncryptionWorkflow } from "./components/EncryptionWorkflow";
+import { SecureSharing } from "./components/SecureSharing";
+import "./App.css";
 
 const sections = [
-  { component: <LicenseForm />, title: 'License Form' },
-  { component: <EncryptionWorkflow />, title: 'Encryption Workflow' },
-  { component: <SecureSharing />, title: 'Secure Sharing' },
+  { component: <LicenseForm />, step: 1 },
+  { component: <EncryptionWorkflow />, step: 2 },
+  { component: <SecureSharing />, step: 3 },
 ];
 
 interface SectionCardProps {
   children: React.ReactNode;
+  step: number;
 }
 
-const SectionCard: React.FC<SectionCardProps> = ({ children }) => (
+const SectionCard: React.FC<SectionCardProps> = ({ children, step }) => (
   <div className="section-card">
+    <div className="step-indicator">{step}</div>
     {children}
   </div>
 );
@@ -28,7 +30,10 @@ function App() {
         <div className="section-container">
           {sections.map((section, index) => (
             <section className="section" key={index}>
-              <SectionCard>{section.component}</SectionCard>
+              <SectionCard step={section.step}>
+                {section.component}
+              </SectionCard>
+              {index < sections.length - 1 && <div className="step-arrow">↓</div>}
             </section>
           ))}
         </div>
