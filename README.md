@@ -50,3 +50,7 @@ b) File encryption
 c) Secure sharing.
 d) MSW (Mock Service Worker) used to mimic backend behavior.
 
+5. Test cases for the Encryption Workflow and license creation
+
+6. LocalStorage for handling the license creation limits
+
