@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import './SecureSharing.css';
 
 export const SecureSharing: React.FC = () => {
@@ -7,13 +7,22 @@ export const SecureSharing: React.FC = () => {
   const [error, setError] = useState<string>('');
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleGenerateLink = async () => {
+  useEffect(() => {
+    let timeout: NodeJS.Timeout;
+    if (secureLink && !isExpired) {
+      timeout = setTimeout(() => setIsExpired(true), 1800000); // 30 minutes expiry
+    }
+
+    return () => clearTimeout(timeout); 
+  }, [secureLink, isExpired]);
+
+  const handleGenerateLink = useCallback(async () => {
     setError('');
     try {
       const response = await fetch('/api/generateSecureLink', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ file: 'encrypted-file-content' })
+        body: JSON.stringify({ file: 'encrypted-file-content' }),
       });
 
       if (!response.ok) {
@@ -23,23 +32,19 @@ export const SecureSharing: React.FC = () => {
       const data = await response.json();
       setSecureLink(data.secureLink);
       setIsExpired(false);
-
-      setTimeout(() => {
-        setIsExpired(true);
-      }, 1800000); // 30 minutes expiry
     } catch (err) {
       setError('An error occurred while generating the secure link.');
     }
-  };
+  }, []);
 
-  const handleEmailShare = () => {
+  const handleEmailShare = useCallback(() => {
     if (!secureLink) return;
     const emailSubject = 'Secure License and Encrypted File';
     const emailBody = `Here is your secure link:\n\n${secureLink}`;
     window.location.href = `mailto:?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
-  };
+  }, [secureLink]);
 
-  const handleDownloadEncryptedFile = async () => {
+  const handleDownloadEncryptedFile = useCallback(async () => {
     try {
       const response = await fetch('/api/downloadEncryptedFile', { method: 'GET' });
 
@@ -55,7 +60,7 @@ export const SecureSharing: React.FC = () => {
     } catch (err) {
       setError('An error occurred while downloading the encrypted file.');
     }
-  };
+  }, []);
 
   return (
     <div>
@@ -73,20 +78,18 @@ export const SecureSharing: React.FC = () => {
               Generate Secure Link
             </button>
 
-            {secureLink && !isExpired && secureLink && (
+            {secureLink && !isExpired ? (
               <div className="secure-link-container">
                 <p>✅ Secure Link Generated:</p>
                 <a href={secureLink} target="_blank" rel="noopener noreferrer" className="secure-link">
                   {secureLink}
                 </a>
               </div>
-            )}
-
-            {isExpired && (
+            ) : isExpired ? (
               <div className="expired-message">
                 <p>⚠️ This link has expired.</p>
               </div>
-            )}
+            ) : null}
 
             {secureLink && (
               <>

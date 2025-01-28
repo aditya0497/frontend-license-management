@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import './LicenseForm.css'; 
+import React, { useState, useEffect } from 'react';
+import './LicenseForm.css';
 
-const API_URL = '/api/createLicense'; 
+const API_URL = '/api/createLicense';
+const MAX_LICENSES_PER_DAY = 5;
 
 const createLicense = async (licenseDetails: any) => {
   const response = await fetch(API_URL, {
@@ -29,6 +30,22 @@ export const LicenseForm: React.FC = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [errors, setErrors] = useState<any>({});
+  const [licenseCount, setLicenseCount] = useState(0);
+  const [isRateLimited, setIsRateLimited] = useState(false);
+
+  useEffect(() => {
+    const today = new Date().toISOString().split('T')[0];
+    const storedDate = localStorage.getItem('licenseDate');
+    const storedCount = parseInt(localStorage.getItem('licenseCount') || '0', 10);
+
+    if (storedDate === today) {
+      setLicenseCount(storedCount);
+      setIsRateLimited(storedCount >= MAX_LICENSES_PER_DAY);
+    } else {
+      localStorage.setItem('licenseDate', today);
+      localStorage.setItem('licenseCount', '0');
+    }
+  }, []);
 
   const validateForm = () => {
     const formErrors: any = {};
@@ -43,19 +60,26 @@ export const LicenseForm: React.FC = () => {
   };
 
   const handleGenerateLicense = async () => {
-    const licenseDetails = {
-      licenseType,
-      expirationDate,
-      hardwareId,
-      usageLimit,
-    };
+    if (isRateLimited) {
+      alert(`You have reached the daily limit of ${MAX_LICENSES_PER_DAY} licenses.`);
+      return;
+    }
 
     if (!validateForm()) return;
+
+    const licenseDetails = { licenseType, expirationDate, hardwareId, usageLimit };
 
     setIsGenerating(true);
     try {
       const generatedKey = await createLicense(licenseDetails);
       setLicenseKey(generatedKey);
+
+      const newCount = licenseCount + 1;
+      setLicenseCount(newCount);
+      localStorage.setItem('licenseCount', newCount.toString());
+      if (newCount >= MAX_LICENSES_PER_DAY) {
+        setIsRateLimited(true);
+      }
     } catch (error) {
       console.error('Error generating license:', error);
       alert('Failed to generate license. Please try again.');
@@ -90,28 +114,19 @@ export const LicenseForm: React.FC = () => {
 
   return (
     <div>
-      <button
-        onClick={() => setIsModalOpen(true)}
-        className="btn-primary"
-      >
+      <button onClick={() => setIsModalOpen(true)} className="btn-primary">
         Create New License
       </button>
 
       {isModalOpen && (
         <div className={`modal-overlay ${isModalOpen ? 'open' : ''}`}>
           <div className={`modal-content ${isModalOpen ? 'open' : ''}`}>
-            <button
-              onClick={() => setIsModalOpen(false)}
-              className="close-btn"
-            >
-              ✕
-            </button>
+            <button onClick={() => setIsModalOpen(false)} className="close-btn">✕</button>
             <h2 className="form-header">Create a New License</h2>
+
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="input-group">
-                <label htmlFor="licenseType" className="label">
-                  License Type
-                </label>
+                <label htmlFor="licenseType" className="label">License Type</label>
                 <select
                   id="licenseType"
                   value={licenseType}
@@ -127,12 +142,7 @@ export const LicenseForm: React.FC = () => {
 
               {licenseType === 'time-bound' && (
                 <div className="input-group">
-                  <label
-                    htmlFor="expirationDate"
-                    className="label"
-                  >
-                    Expiration Date
-                  </label>
+                  <label htmlFor="expirationDate" className="label">Expiration Date</label>
                   <input
                     type="date"
                     id="expirationDate"
@@ -143,14 +153,10 @@ export const LicenseForm: React.FC = () => {
                   {errors.expirationDate && <p className="error-text">{errors.expirationDate}</p>}
                 </div>
               )}
+
               {licenseType === 'hardware-specific' && (
                 <div className="input-group">
-                  <label
-                    htmlFor="hardwareId"
-                    className="label"
-                  >
-                    Hardware ID / MAC Address
-                  </label>
+                  <label htmlFor="hardwareId" className="label">Hardware ID / MAC Address</label>
                   <input
                     type="text"
                     id="hardwareId"
@@ -161,14 +167,10 @@ export const LicenseForm: React.FC = () => {
                   {errors.hardwareId && <p className="error-text">{errors.hardwareId}</p>}
                 </div>
               )}
+
               {licenseType === 'usage-limited' && (
                 <div className="input-group">
-                  <label
-                    htmlFor="usageLimit"
-                    className="label"
-                  >
-                    Usage Limit
-                  </label>
+                  <label htmlFor="usageLimit" className="label">Usage Limit</label>
                   <input
                     type="number"
                     id="usageLimit"
@@ -180,13 +182,11 @@ export const LicenseForm: React.FC = () => {
                 </div>
               )}
 
-              <button
-                type="submit"
-                className="btn-primary"
-                disabled={isGenerating}
-              >
+              <button type="submit" className="btn-primary" disabled={isGenerating || isRateLimited}>
                 {isGenerating ? 'Generating...' : 'Generate License'}
               </button>
+
+              {isRateLimited && <p className="error-text">Daily limit reached. Try again tomorrow.</p>}
             </form>
 
             {licenseKey && (
@@ -194,18 +194,8 @@ export const LicenseForm: React.FC = () => {
                 <h3 className="text-lg font-semibold">Generated License Key</h3>
                 <pre className="mt-2 p-3 bg-gray-100 border rounded">{licenseKey}</pre>
                 <div className="mt-4 flex gap-2">
-                  <button
-                    onClick={handleCopyLicense}
-                    className="btn-copy"
-                  >
-                    Copy License
-                  </button>
-                  <button
-                    onClick={handleDownloadLicense}
-                    className="btn-download"
-                  >
-                    Download License
-                  </button>
+                  <button onClick={handleCopyLicense} className="btn-copy">Copy License</button>
+                  <button onClick={handleDownloadLicense} className="btn-download">Download License</button>
                 </div>
               </div>
             )}

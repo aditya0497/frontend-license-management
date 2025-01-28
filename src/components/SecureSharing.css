@@ -62,6 +62,7 @@
   padding: 10px;
   background: #E0E7FF;
   border-radius: 6px;
+  animation: fadeIn 0.3s ease-in-out;
 }
 
 .secure-link {
